@@ -14,9 +14,9 @@ type Book = {
 };
 
 export default async function Home() {
-  const res = await fetch(
-    "https://nq8jd7gcp3.execute-api.us-east-1.amazonaws.com/prod/books"
-  );
+  const res = await fetch(`${process.env.API_GATWAY_GET_ALL_BOOKS}`, {
+    cache: "default",
+  });
   const books = await res.json();
   console.log(books);
 
