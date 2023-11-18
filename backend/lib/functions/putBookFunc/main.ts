@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const client = new DynamoDBClient();
 
-async function lambdaHandler(event: any): Promise<any> {
+exports.handler = async function lambdaHandler(event: any): Promise<any> {
   // Parse the body to get the item
   const itemData = JSON.parse(event.body);
   itemData.id = itemData.id ?? uuidv4();
@@ -22,11 +22,7 @@ async function lambdaHandler(event: any): Promise<any> {
     await client.send(new PutItemCommand(params));
     return {
       statusCode: "200",
-      header: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-      },
-      body: "Item put successfully",
+      body: JSON.stringify(itemData),
     };
   } catch (error) {
     console.error(error);
@@ -35,5 +31,5 @@ async function lambdaHandler(event: any): Promise<any> {
       body: "Internal Server Error",
     };
   }
-}
-exports.handler = lambdaHandler;
+};
+// exports.handler = lambdaHandler;

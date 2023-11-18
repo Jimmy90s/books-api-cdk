@@ -20,7 +20,7 @@ export const createCRUDLAPIGateway = (
     restApiName: props.apiName,
   });
 
-  //Api gatway -- /books
+  //Api gatway takes the root path "/" and turns into "/baseReasourceName" coming from props
   const baseReasource = api.root.addResource(props.baseReasourceName);
   //  /books/{id}
   const leafReasource = baseReasource.addResource(
@@ -37,19 +37,19 @@ export const createCRUDLAPIGateway = (
     allowMethods: Cors.ALL_METHODS,
   });
 
-  // Tie in Lambda function to a Get route
+  // Tie in Lambda functions
+  const getItemLeafIntegration = new LambdaIntegration(props.getItemLeafFunc);
   const getAllBaseIntegration = new LambdaIntegration(props.getAllBaseFunc);
   const putItemBaseIntegration = new LambdaIntegration(props.putItemBaseFunc);
   const deleteItemBaseIntegration = new LambdaIntegration(
     props.deleteItemBaseFunc
   );
-  const getItemLeafIntegration = new LambdaIntegration(props.getItemLeafFunc);
 
   baseReasource.addMethod("GET", getAllBaseIntegration);
-  leafReasource.addMethod("GET", getItemLeafIntegration);
   baseReasource.addMethod("POST", putItemBaseIntegration);
   baseReasource.addMethod("PUT", putItemBaseIntegration);
   baseReasource.addMethod("DELETE", deleteItemBaseIntegration);
+  leafReasource.addMethod("GET", getItemLeafIntegration);
 
   return api;
 };
